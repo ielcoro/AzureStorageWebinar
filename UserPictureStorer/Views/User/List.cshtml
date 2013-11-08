@@ -9,35 +9,55 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Age)
-        </th>
-        <th></th>
-    </tr>
+<div class="row">
+    @using (Html.BeginForm("filter", "user", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-inline">
+            <div class="form-group col-lg-12 col-lg-offset-8">
+                <label for="name">Filter Name</label>
+                <input class="form-control" type="text" name="name" value="@this.ViewBag.CurrentFilter" />
+                <a href="@Url.Action("clearFilter", "User")"><span class="glyphicon glyphicon-remove-circle"></span></a>
+            </div>
+        </div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Age)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new {  partitionKey = item.PartitionKey, rowKey = item.RowKey }) |
-        </td>
-    </tr>
-}
+    }
 
-</table>
+</div>
+<div class="row top-buffer">
+    <div class="col-lg-12">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Age)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+        {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Age)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { partitionKey = item.PartitionKey, rowKey = item.RowKey }) |
+                    </td>
+                </tr>
+        }
+
+        </table>
+    </div>
+</div>

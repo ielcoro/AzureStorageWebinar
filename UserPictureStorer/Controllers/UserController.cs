@@ -55,7 +55,23 @@ namespace UserPictureStorer.Controllers
             }
         }
 
-        
+        [HttpPost]
+        public ActionResult Filter(string name)
+        {
+            using (var userRepository = new UserRepository())
+            {
+                var query = userRepository.Users.Where(u => u.FirstName == name);
+
+                ViewBag.CurrentFilter = name;
+                return View("List", query); 
+            }
+        }
+
+        public ActionResult ClearFilter()
+        {
+            ViewBag.CurrentFilter = String.Empty;
+            return RedirectToAction("List");
+        }
         
     }
 }

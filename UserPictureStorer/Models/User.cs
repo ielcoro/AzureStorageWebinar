@@ -37,7 +37,7 @@ namespace UserPictureStorer.Models
 
 
 
-        public string Age { get; set; }
+        public int Age { get; set; }
 
     }
 }
