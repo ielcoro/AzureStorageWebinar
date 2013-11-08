@@ -36,8 +36,9 @@ namespace UserPictureStorer.Models
         }
 
 
-
         public int Age { get; set; }
+        
+        public string PictureUrl { get; set; }        
 
     }
 }

@@ -72,6 +72,18 @@ namespace UserPictureStorer.Controllers
             ViewBag.CurrentFilter = String.Empty;
             return RedirectToAction("List");
         }
+
+        [HttpPost]
+        public ActionResult Upload(HttpPostedFile file)
+        {
+            var imageStorage = new ImageRepository();
+
+            Uri tempBlobUri = imageStorage.SaveTempFile(file.InputStream);
+
+            ViewBag.TempBlobUri = tempBlobUri;
+
+            return View("Create");
+        }
         
     }
 }
