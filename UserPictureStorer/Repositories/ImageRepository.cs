@@ -35,13 +35,28 @@ namespace UserPictureStorer.Repositories
             CloudBlobDirectory directory = containerReference.GetDirectoryReference(partitionKey + "/" + rowKey);
 
             CloudBlockBlob blockBlob = directory.GetBlockBlobReference(Path.GetFileName(fileName));
-            
+
+            if (blockBlob.Exists())
+                blockBlob.CreateSnapshot();
+
             using (file)
             {
                 blockBlob.UploadFromStream(file);
             }
 
             return blockBlob.Uri;
+        }
+
+        public IEnumerable<Uri> GetSnapshots(string partitionKey, string rowKey, string fileName)
+        {
+            CloudBlobContainer containerReference = GetContainerAndCreateIfNeeded();
+
+            var blobsWithSnapshots = containerReference.ListBlobs(partitionKey + "/" + rowKey, true, BlobListingDetails.Snapshots);
+
+            return blobsWithSnapshots
+                        .Cast<CloudBlockBlob>()
+                        .Where(b => b.IsSnapshot)
+                        .Select(b => b.SnapshotQualifiedUri);
         }
     }
 }

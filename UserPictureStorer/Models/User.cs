@@ -22,13 +22,14 @@ namespace UserPictureStorer.Models
 
         }
 
+        [IgnoreProperty]
         public string FirstName
         {
             get { return this.PartitionKey; }
             set { this.PartitionKey = value; }
         }
 
-
+        [IgnoreProperty]
         public string LastName
         {
             get { return this.RowKey; }

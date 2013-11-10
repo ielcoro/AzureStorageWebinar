@@ -186,6 +186,7 @@
     <Content Include="Views\User\List.cshtml" />
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

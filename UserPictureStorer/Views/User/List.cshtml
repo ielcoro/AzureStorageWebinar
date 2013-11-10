@@ -54,6 +54,7 @@
                     </td>
                     <td>
                         @Html.ActionLink("Details", "Details", new { partitionKey = item.PartitionKey, rowKey = item.RowKey }) |
+                        @Html.ActionLink("Edit", "Edit", new { partitionKey = item.PartitionKey, rowKey = item.RowKey }) 
                     </td>
                 </tr>
         }

@@ -1,0 +1,82 @@
+﻿@model UserPictureStorer.Models.User
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("Edit", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>User</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName)
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName)
+                @Html.ValidationMessageFor(model => model.LastName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Age, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Age)
+                @Html.ValidationMessageFor(model => model.Age)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="currentPicture" class="control-label col-md-2">User Picture</label>
+            <div class="col-md-2">
+                <img id="currentPicture" class="img-rounded " src="@Html.ValueFor(model => model.PictureUrl)" width="128" height="128" />
+            </div>
+        </div>
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-md-2">Update User Picture</label>
+                <input class="btn col-md-10" type="file" name="picture" />
+            </div>
+            <div id="PreviousPictures" class="form-group">
+                <label class="control-label col-md-2">Or Select previous one</label>                
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "List")
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $.getJSON('@Url.Action("LoadPreviousPictures", new { partitionKey = Model.PartitionKey, rowKey = Model.RowKey })', function (d, t, xhr) {
+            for (var i = 0; i < d.length; i++) {
+                $('#PreviousPictures').append('<div id="picture' + i + '" class="col-md-' + (i + 2) + '" radio-inline"></div>');
+                $('#picture' + i).append('<input id="chk' + i + '" name="pictureOptions" type="radio" value="' + d[i].Url + '" />');
+                $('#picture' + i).append('<img class="img-rounded" src="' + d[i].Url + '" width="128" height="128" />');
+            }
+        });
+
+    </script>
+}
