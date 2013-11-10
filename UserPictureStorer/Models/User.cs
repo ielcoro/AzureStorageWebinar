@@ -14,34 +14,44 @@ namespace UserPictureStorer.Models
     {
         public User()
         {
-
+            
         }
 
-        public User(string firstName, string lastName)
-            : base(firstName, lastName)
-        {
 
-        }
+        public string FirstName { get; set; }
 
-        [IgnoreProperty]
-        public string FirstName
-        {
-            get { return this.PartitionKey; }
-            set { this.PartitionKey = value; }
-        }
-
-        [IgnoreProperty]
-        public string LastName
-        {
-            get { return this.RowKey; }
-            set { this.RowKey = value; }
-        }
-
+        public string LastName { get; set; }
 
         public int Age { get; set; }
         
         [Display(Name="User Picture")]
-        public string PictureUrl { get; set; }        
+        public string PictureUrl { get; set; }
+
+        public override string PartitionKey
+        {
+            get
+            {
+                return "Users";
+            }
+            set
+            {
+                base.PartitionKey = value;
+            }
+        }
+
+        public override string RowKey
+        {
+            get
+            {
+                return FirstName;
+            }
+            set
+            {
+                base.RowKey = value;
+            }
+        }
+
+
 
     }
 }

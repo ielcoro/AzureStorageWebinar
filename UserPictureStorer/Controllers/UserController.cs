@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Services.Client;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using UserPictureStorer.Models;
@@ -54,9 +56,12 @@ namespace UserPictureStorer.Controllers
 
                     var postedUserPicture = Request.Files.Get("picture");
 
-                    Uri pictureUri = imageRepository.SaveFile(user.PartitionKey, user.RowKey, "me.jpg", postedUserPicture.InputStream);
+                    if (postedUserPicture.ContentLength > 0)
+                    {
+                        Uri pictureUri = imageRepository.SaveFile(user.PartitionKey, user.RowKey, "me.jpg", postedUserPicture.InputStream);
 
-                    user.PictureUrl = pictureUri.ToString();
+                        user.PictureUrl = pictureUri.ToString();
+                    }
 
                     userRepository.SaveChanges();
                 }
@@ -93,7 +98,7 @@ namespace UserPictureStorer.Controllers
 
                     if (postedUserPicture.ContentLength > 0)
                         pictureUri = imageRepository.SaveFile(user.PartitionKey, user.RowKey, "me.jpg", postedUserPicture.InputStream);
-                    else
+                    else if (Request.Form["pictureOptions"] != null)
                         pictureUri = new Uri(Request.Form["pictureOptions"].ToString());
 
                     var currentUser = userRepository.Users
@@ -120,7 +125,7 @@ namespace UserPictureStorer.Controllers
         {
             using (var userRepository = new UserRepository())
             {
-                var query = userRepository.Users.Where(u => u.FirstName == name);
+                var query = userRepository.Users.Where(u => u.PartitionKey == "Users" && u.RowKey == name);
 
                 ViewBag.CurrentFilter = name;
                 return View("List", query); 
@@ -141,6 +146,19 @@ namespace UserPictureStorer.Controllers
 
             return Json(snapshots.Select(s => new { Url = s.ToString() }).ToArray(), JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public ActionResult DeleteAll()
+        {
+            var userRepository = new UserRepository();
 
+            foreach (var user in userRepository.Users)
+            {
+                userRepository.DeleteObject(user);
+            }
+
+            userRepository.SaveChanges(SaveChangesOptions.Batch);
+
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
     }
 }

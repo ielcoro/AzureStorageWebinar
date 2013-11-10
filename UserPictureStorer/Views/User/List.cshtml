@@ -60,4 +60,19 @@
         }
         </table>
     </div>
+    <div class="row">
+        <div class="col-lg-offset-11">
+            <button class="btn btn-danger" type="button" id="Delete">Delete All</button>
+        </div>
+    </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#Delete').click(function () {
+            $.post('@Url.Action("DeleteAll")', function (d) {
+                location.reload();
+            });
+        });
+    </script>
+}

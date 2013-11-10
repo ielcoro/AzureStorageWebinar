@@ -17,8 +17,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FirstName)
-                @Html.ValidationMessageFor(model => model.FirstName)
+                @Html.DisplayFor(model => model.FirstName)
             </div>
         </div>
 
@@ -70,7 +69,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        $.getJSON('@Url.Action("LoadPreviousPictures", new { partitionKey = Model.PartitionKey, rowKey = Model.RowKey })', function (d, t, xhr) {
+        $.getJSON('@Url.Action("LoadPreviousPictures")' + '?partitionKey=@Html.ValueFor(u => u.PartitionKey)&rowKey=@Html.ValueFor(u => u.RowKey)' , function (d, t, xhr) {
             for (var i = 0; i < d.length; i++) {
                 $('#PreviousPictures').append('<div id="picture' + i + '" class="col-md-' + (i + 2) + '" radio-inline"></div>');
                 $('#picture' + i).append('<input id="chk' + i + '" name="pictureOptions" type="radio" value="' + d[i].Url + '" />');
