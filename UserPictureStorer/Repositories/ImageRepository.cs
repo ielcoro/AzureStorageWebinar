@@ -19,30 +19,29 @@ namespace UserPictureStorer.Repositories
             this.blobClient = cloudStorageAccount.CreateCloudBlobClient();
         }
 
-
-        public Uri SaveTempFile(Stream stream)
-        {
-            CloudBlobContainer containerReference = GetContainerAndCreateIfNeeded();
-
-            CloudBlobDirectory directory = containerReference.GetDirectoryReference("tempFiles");
-
-            CloudBlockBlob blockBlob = directory.GetBlockBlobReference(Guid.NewGuid().ToString());
-
-            using (stream)
-            {
-                blockBlob.UploadFromStream(stream);
-            }
-
-            return blockBlob.Uri;
-        }
-
         private CloudBlobContainer GetContainerAndCreateIfNeeded()
         {
-            var containerReference = blobClient.GetContainerReference("userImages");
+            var containerReference = blobClient.GetContainerReference("userimages");
 
             containerReference.CreateIfNotExists();
 
             return containerReference;
+        }
+
+        public Uri SaveFile(string partitionKey, string rowKey, string fileName, Stream file)
+        {
+            CloudBlobContainer containerReference = GetContainerAndCreateIfNeeded();
+
+            CloudBlobDirectory directory = containerReference.GetDirectoryReference(partitionKey + "/" + rowKey);
+
+            CloudBlockBlob blockBlob = directory.GetBlockBlobReference(Path.GetFileName(fileName));
+            
+            using (file)
+            {
+                blockBlob.UploadFromStream(file);
+            }
+
+            return blockBlob.Uri;
         }
     }
 }

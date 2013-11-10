@@ -44,6 +44,15 @@ namespace UserPictureStorer.Controllers
                 using (var userRepository = new UserRepository())
                 {
                     userRepository.AddObject("Users", user);
+
+                    var imageRepository = new ImageRepository();
+
+                    var postedUserPicture = Request.Files.Get("picture");
+
+                    Uri pictureUri = imageRepository.SaveFile(user.PartitionKey, user.RowKey, postedUserPicture.FileName, postedUserPicture.InputStream);
+
+                    user.PictureUrl = pictureUri.ToString();
+
                     userRepository.SaveChanges();
                 }
 
@@ -71,18 +80,6 @@ namespace UserPictureStorer.Controllers
         {
             ViewBag.CurrentFilter = String.Empty;
             return RedirectToAction("List");
-        }
-
-        [HttpPost]
-        public ActionResult Upload(HttpPostedFile file)
-        {
-            var imageStorage = new ImageRepository();
-
-            Uri tempBlobUri = imageStorage.SaveTempFile(file.InputStream);
-
-            ViewBag.TempBlobUri = tempBlobUri;
-
-            return View("Create");
         }
         
     }
