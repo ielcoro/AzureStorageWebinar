@@ -2,6 +2,7 @@
 using Microsoft.WindowsAzure.Storage.Table.DataServices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Services.Common;
 using System.Drawing;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace UserPictureStorer.Models
 
         public int Age { get; set; }
         
+        [Display(Name="User Picture")]
         public string PictureUrl { get; set; }        
 
     }
