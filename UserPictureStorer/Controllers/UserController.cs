@@ -24,7 +24,12 @@ namespace UserPictureStorer.Controllers
         // GET: /User/Details/5
         public ActionResult Details(string partitionKey, string rowKey)
         {
-            return View();
+            using (var userRepository = new UserRepository())
+            {
+                var userQuery = userRepository.Users.Where(u => u.PartitionKey == partitionKey && u.RowKey == rowKey);
+                
+                return View(userQuery);
+            }
         }
 
         //
