@@ -28,7 +28,7 @@ namespace UserPictureStorer.Controllers
             {
                 var userQuery = userRepository.Users.Where(u => u.PartitionKey == partitionKey && u.RowKey == rowKey);
                 
-                return View(userQuery);
+                return View(userQuery.Single());
             }
         }
 
