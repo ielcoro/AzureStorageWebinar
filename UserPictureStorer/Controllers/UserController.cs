@@ -93,6 +93,12 @@ namespace UserPictureStorer.Controllers
                 {
                     var imageRepository = new ImageRepository();
 
+                    var currentUser = userRepository.Users
+                                                    .Where(u => u.PartitionKey == user.PartitionKey && u.RowKey == user.RowKey)
+                                                    .Single();
+
+                    TryUpdateModel(currentUser);
+
                     Uri pictureUri = null;
                     var postedUserPicture = Request.Files.Get("picture");
 
@@ -101,11 +107,6 @@ namespace UserPictureStorer.Controllers
                     else if (Request.Form["pictureOptions"] != null)
                         pictureUri = new Uri(Request.Form["pictureOptions"].ToString());
 
-                    var currentUser = userRepository.Users
-                                                    .Where(u => u.PartitionKey == user.PartitionKey && u.RowKey == user.RowKey)
-                                                    .Single();
-
-                    TryUpdateModel(currentUser);
                     currentUser.PictureUrl = pictureUri.ToString();
 
                     userRepository.UpdateObject(currentUser);
