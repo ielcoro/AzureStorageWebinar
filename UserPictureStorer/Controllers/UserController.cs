@@ -80,7 +80,13 @@ namespace UserPictureStorer.Controllers
             {
                 var userQuery = userRepository.Users.Where(u => u.PartitionKey == partitionKey && u.RowKey == rowKey);
 
-                return View(userQuery.Single());
+                var imageRepository = new ImageRepository();
+
+                var user = userQuery.Single();
+
+                var snapshots = imageRepository.GetSnapshots(user.PartitionKey, user.RowKey, "me.jpg");
+
+                return View(user);
             }
         }
 
